@@ -16,26 +16,36 @@ const SocureComponent = ({
 
     let sdkInitiated = false;
     let changesDone = false;
+    let eventId = "";
 
     const onProgress = (progress) => {
-      console.log(progress);
-      console.log('progress');
+      // console.log(progress);
+      // console.log('progress');
     };
 
     const onSuccess = (response) => {
-      console.log(response);
-      console.log('success');
-      if (typeof onSuccessCallback === 'function') {
-        clearSession();
-        onSuccessCallback(response);
+      if (eventId != "") {
+        //console.log(response);
+        // console.log('success');
+        if (typeof onSuccessCallback === 'function') {
+          onSuccessCallback(response);
+          eventId = ""
+          document.getElementById("results").innerHTML = "Document Verification Process succesfully completed!";
+          document.getElementById("websdk").style.display = "none"
+        }
       }
     };
 
     const onError = (error) => {
-      console.log(error);
-      console.log('error');
-      if (typeof onErrorCallback === 'function') {
-        onErrorCallback(error);
+      if (eventId != "") {
+        // console.log(error);
+        // console.log('error');
+        if (typeof onErrorCallback === 'function') {
+          onErrorCallback(error);
+          eventId = ""
+          document.getElementById("results").innerHTML = "Document Verification Process failed!";
+          document.getElementById("websdk").style.display = "none"
+        }
       }
     };
 
@@ -58,7 +68,6 @@ const SocureComponent = ({
     const start = () => {
       if (sdkInitiated) {
         clearSession();
-        console.log('cleaned');
         sdkInitiated = false;
       }
 
@@ -73,6 +82,9 @@ const SocureComponent = ({
             (response) => {
               console.log(response);
               sdkInitiated = true;
+              eventId = response.eventId;
+              document.getElementById("websdk").style.display = "block"    
+              document.getElementById("results").style.display = "none"    
             },
             (error) => {
               console.log(error);
@@ -93,6 +105,7 @@ const SocureComponent = ({
     <>
       <button onClick={start}>Start</button>
       <div id="websdk"></div>
+      <div id="results"></div>
     </>
   );
 };
