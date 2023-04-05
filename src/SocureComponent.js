@@ -26,6 +26,7 @@ const SocureComponent = ({
       console.log(response);
       console.log('success');
       if (typeof onSuccessCallback === 'function') {
+        clearSession();
         onSuccessCallback(response);
       }
     };
